@@ -2,9 +2,9 @@ using CleanArchitecture.Domain.Abstractions;
 
 namespace CleanArchitecture.Domain.Vehiculos;
 
-public sealed class Vehiculos : Entity
+public sealed class Vehiculo : Entity
 {
-    public Vehiculos(
+    public Vehiculo(
         Guid id,
         Modelo modelo,
         Vin vin,
