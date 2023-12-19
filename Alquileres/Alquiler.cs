@@ -28,8 +28,6 @@ public sealed class Alquiler : Entity
         Duration = duration;
         DateCreation = dateCreation;
         Status = status;
-
-
     }
 
     public Guid VehicleID { get; private set; }
@@ -47,15 +45,20 @@ public sealed class Alquiler : Entity
     public DateTime? DateCancel { get; private set; }
 
     public static Alquiler Create(
-        Guid vehicleID,
+        Vehiculo vehicle,
         Guid userID,
         DateRange duration,
         DateTime dateCreation,
-        DetailPrice detailPrice
+        PriceService priceService
     ){
+        var detailPrice = priceService.CalculatePrice(
+            vehicle,
+            duration
+        );
+
         var alquiler = new Alquiler(
             Guid.NewGuid(),
-            vehicleID,
+            vehicle.ID,
             userID,
             detailPrice.PeriodPrice,
             detailPrice.Maintenance,
@@ -67,6 +70,8 @@ public sealed class Alquiler : Entity
         );
 
         alquiler.RaiseDomainEvent(new AlquilerReservadoDomainEvent(alquiler.ID));
+
+        vehicle.FechaUltimoAlquiler = dateCreation;
 
         return alquiler;
     }

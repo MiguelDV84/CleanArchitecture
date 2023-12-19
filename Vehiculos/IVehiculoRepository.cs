@@ -2,5 +2,5 @@ namespace CleanArchitecture.Domain.Vehiculos;
 
 public interface IVehiculoRepository
 {
-    Task<Vehiculos> GetByIdAsybnc(Guid VehiculoID, CancellationToken cancellationToken);
+    Task<Vehiculo> GetByIdAsybnc(Guid VehiculoID, CancellationToken cancellationToken);
 }
