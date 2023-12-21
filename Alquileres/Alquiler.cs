@@ -75,4 +75,56 @@ public sealed class Alquiler : Entity
 
         return alquiler;
     }
+
+    public Result Confirmation(DateTime utcNow)
+    {
+        if(Status != AlquilerStatus.Reservado)
+        {
+            return Result.Failure(AlquilerErrors.NotReserved);
+        }
+
+        Status = AlquilerStatus.Confirmado;
+        DateConfirmation = utcNow;
+
+        RaiseDomainEvent(new AlquilerConfirmadoDomainEvent(ID));
+
+        return Result.Success();
+    }
+
+    public Result Reject(DateTime utcNow)
+    {
+        if(Status != AlquilerStatus.Reservado)
+        {
+            return Result.Failure(AlquilerErrors.NotReserved);
+        }
+
+        Status = AlquilerStatus.Rechazado;
+        DateConfirmation = utcNow;
+
+        RaiseDomainEvent(new AlquilerRechazadoDomainEvent(ID));
+
+        return Result.Success();
+    }
+
+    public Result Cencelled(DateTime utcNow)
+    {
+        if(Status != AlquilerStatus.Confirmado)
+        {
+            return Result.Failure(AlquilerErrors.NotConfirmed);
+        }
+
+        var currentDate = DateOnly.FromDateTime(utcNow);
+
+        if(currentDate > Duration!.InitialDate)
+        {
+            return Result.Failure(AlquilerErrors.AlreadyStarted);
+        }
+
+        Status = AlquilerStatus.Cancelado;
+        DateConfirmation = utcNow;
+
+        RaiseDomainEvent(new AlquilerCanceladoDomainEvent(ID));
+
+        return Result.Success();
+    }
 }
