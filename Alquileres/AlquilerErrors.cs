@@ -1,6 +1,6 @@
 using CleanArchitecture.Domain.Abstractions;
 
-namespace CleanArchitecture.Domain.Alquileres;
+namespace CleanArchitecture.Domain.Alquileres.Events;
 
 public static class AlquilerErrors
 {
@@ -28,4 +28,5 @@ public static class AlquilerErrors
         "Alquiler.AlreadyStarted",
         "El alquiler ya fue iniciado"
     );
+
 }
