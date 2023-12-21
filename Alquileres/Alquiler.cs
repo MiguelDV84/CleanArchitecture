@@ -1,5 +1,6 @@
 using CleanArchitecture.Domain.Abstractions;
 using CleanArchitecture.Domain.Alquileres.Events;
+using CleanArchitecture.Domain.Shared;
 using CleanArchitecture.Domain.Vehiculos;
 
 namespace CleanArchitecture.Domain.Alquileres;
@@ -18,7 +19,7 @@ public sealed class Alquiler : Entity
         DateTime dateCreation,
         AlquilerStatus status
         ) : base(id)
-    { 
+    {
         VehicleID = vehicleID;
         UserID = userID;
         Price = price;
@@ -33,9 +34,9 @@ public sealed class Alquiler : Entity
     public Guid VehicleID { get; private set; }
     public Guid UserID { get; private set; }
     public Moneda? Price { get; private set; }
-    public Moneda? Maintenance { get; private set;}
+    public Moneda? Maintenance { get; private set; }
     public Moneda? Accesory { get; private set; }
-    public Moneda? TotalPrice { get; private set;}
+    public Moneda? TotalPrice { get; private set; }
     public AlquilerStatus Status { get; private set; }
     public DateRange? Duration { get; private set; }
     public DateTime? DateCreation { get; private set; }
@@ -50,7 +51,8 @@ public sealed class Alquiler : Entity
         DateRange duration,
         DateTime dateCreation,
         PriceService priceService
-    ){
+    )
+    {
         var detailPrice = priceService.CalculatePrice(
             vehicle,
             duration
@@ -63,7 +65,7 @@ public sealed class Alquiler : Entity
             detailPrice.PeriodPrice,
             detailPrice.Maintenance,
             detailPrice.Accesory,
-            detailPrice.TotalPrice, 
+            detailPrice.TotalPrice,
             duration,
             dateCreation,
             AlquilerStatus.Reservado
@@ -78,7 +80,7 @@ public sealed class Alquiler : Entity
 
     public Result Confirmation(DateTime utcNow)
     {
-        if(Status != AlquilerStatus.Reservado)
+        if (Status != AlquilerStatus.Reservado)
         {
             return Result.Failure(AlquilerErrors.NotReserved);
         }
@@ -93,13 +95,13 @@ public sealed class Alquiler : Entity
 
     public Result Reject(DateTime utcNow)
     {
-        if(Status != AlquilerStatus.Reservado)
+        if (Status != AlquilerStatus.Reservado)
         {
             return Result.Failure(AlquilerErrors.NotReserved);
         }
 
         Status = AlquilerStatus.Rechazado;
-        DateConfirmation = utcNow;
+        DateDenial = utcNow;
 
         RaiseDomainEvent(new AlquilerRechazadoDomainEvent(ID));
 
@@ -108,22 +110,37 @@ public sealed class Alquiler : Entity
 
     public Result Cencelled(DateTime utcNow)
     {
-        if(Status != AlquilerStatus.Confirmado)
+        if (Status != AlquilerStatus.Confirmado)
         {
             return Result.Failure(AlquilerErrors.NotConfirmed);
         }
 
         var currentDate = DateOnly.FromDateTime(utcNow);
 
-        if(currentDate > Duration!.InitialDate)
+        if (currentDate > Duration!.InitialDate)
         {
             return Result.Failure(AlquilerErrors.AlreadyStarted);
         }
 
         Status = AlquilerStatus.Cancelado;
-        DateConfirmation = utcNow;
+        DateCancel = utcNow;
 
         RaiseDomainEvent(new AlquilerCanceladoDomainEvent(ID));
+
+        return Result.Success();
+    }
+
+    public Result Completed(DateTime utcNow)
+    {
+        if (Status != AlquilerStatus.Confirmado)
+        {
+            return Result.Failure(AlquilerErrors.NotConfirmed);
+        }
+
+        Status = AlquilerStatus.Completado;
+        DateCompleted = utcNow;
+
+        RaiseDomainEvent(new AlquilerCompletadoDomainEvent(ID));
 
         return Result.Success();
     }

@@ -1,10 +1,10 @@
-namespace CleanArchitecture.Domain.Vehiculos;
+namespace CleanArchitecture.Domain.Shared;
 
-public record Moneda(decimal Cantidad,TipoMoneda TipoMoneda)
+public record Moneda(decimal Cantidad, TipoMoneda TipoMoneda)
 {
     public static Moneda operator +(Moneda primera, Moneda segunda)
     {
-        if(primera.TipoMoneda != segunda.TipoMoneda)
+        if (primera.TipoMoneda != segunda.TipoMoneda)
         {
             throw new InvalidOperationException("El tipo de moneda debe ser el mismo");
         }

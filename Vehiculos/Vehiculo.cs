@@ -1,4 +1,5 @@
 using CleanArchitecture.Domain.Abstractions;
+using CleanArchitecture.Domain.Shared;
 
 namespace CleanArchitecture.Domain.Vehiculos;
 
@@ -14,7 +15,7 @@ public sealed class Vehiculo : Entity
         List<Accesorio> accesorios,
         Direccion? direccion
         ) : base(id)
-    { 
+    {
         Modelo = modelo;
         Vin = vin;
         Precio = precio;
