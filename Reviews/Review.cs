@@ -1,5 +1,5 @@
 using CleanArchitecture.Domain.Abstractions;
-using CleanArchitecture.Domain.Alquileres;
+using CleanArchitecture.Domain.Rents;
 
 namespace CleanArchitecture.Domain.Reviews;
 
@@ -30,13 +30,13 @@ public sealed class Review : Entity
     public DateTime? DateCreation { get; private set; }
 
     public static Result<Review> Create(
-        Alquiler rent,
+        Rent rent,
         Rating rating,
         Comment? comment,
         DateTime? dateCreation
     )
     {
-        if(rent.Status != AlquilerStatus.Completado)
+        if(rent.Status != RentalStatus.Completed)
         {
             return Result.Failure<Review>(ReviewErrors.NotEligible);
         }

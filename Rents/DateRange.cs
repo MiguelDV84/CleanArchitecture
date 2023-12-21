@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Domain.Alquileres;
+namespace CleanArchitecture.Domain.Rents;
 
 public sealed record DateRange
 {

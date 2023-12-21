@@ -1,8 +1,8 @@
 using CleanArchitecture.Domain.Abstractions;
 
-namespace CleanArchitecture.Domain.Alquileres.Events;
+namespace CleanArchitecture.Domain.Rents;
 
-public static class AlquilerErrors
+public static class RentalErrors
 {
     public static Error NotFound = new Error(
         "Alquiler.NotFound",

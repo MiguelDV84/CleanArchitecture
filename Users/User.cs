@@ -7,30 +7,30 @@ public sealed class User : Entity
 {
     private User(
         Guid id,
-        Nomber? nombre,
-        Apellido? apellido,
+        Name? name,
+        LastName? lastName,
         Email? email
         ) : base(id)
     {
-        Nombre = nombre;
-        Apellido = apellido;
+        Name = name;
+        LastName = lastName;
         Email = email;
     }
 
-    public Nomber? Nombre { get; private set; }
-    public Apellido? Apellido { get; private set; }
+    public Name? Name { get; private set; }
+    public LastName? LastName { get; private set; }
     public Email? Email { get; private set; }
 
     public static User Create(
-        Nomber nombre,
-        Apellido apellido,
+        Name name,
+        LastName lastName,
         Email email
         )
     {
         var user = new User(
             Guid.NewGuid(),
-            nombre,
-            apellido,
+            name,
+            lastName,
             email
         );
         user.RaiseDomainEvent(new UserCreatedDomainEvents(user.ID));

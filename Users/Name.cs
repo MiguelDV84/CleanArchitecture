@@ -1,3 +1,3 @@
 namespace CleanArchitecture.Domain.Users;
 
-public record Nomber(string Value);
+public record Name(string Value);
